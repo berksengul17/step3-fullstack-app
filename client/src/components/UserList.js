@@ -1,63 +1,76 @@
 import React, { useEffect, useState } from "react";
 import User from "./User";
 import UserForm from "./UserForm";
-import EditUserForm from "./EditUserForm";
+import { fetchUsers, addUser, updateUser, deleteUser } from "../userService";
 
 function UserList() {
   const [users, setUsers] = useState([]);
+
   useEffect(() => {
-    setUsers([
-      { id: 1, name: "berk", isEditing: false },
-      { id: 2, name: "ali", isEditing: false },
-      { id: 3, name: "ayşe", isEditing: false },
-      { id: 4, name: "fatma", isEditing: false },
-    ]);
+    fetchData();
   }, []);
 
-  const addUser = (name) => {
-    setUsers([
-      ...users,
-      { id: users[users.length - 1].id + 1, name, isEditing: false },
-    ]);
+  const fetchData = () => {
+    fetchUsers()
+      .then((data) => {
+        setUsers(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   };
 
-  const editUser = (id, newName) => {
-    setUsers(
-      users.map((user) =>
-        user.id === id
-          ? { ...user, name: newName, isEditing: !user.isEditing }
-          : user
-      )
-    );
+  const handleAddUser = (newUser) => {
+    const id = users.length > 0 ? users[users.length - 1].id + 1 : 1;
+    addUser({ id, ...newUser })
+      .then((data) => {
+        console.log("User added successfully:", data);
+        setUsers([...users, data]);
+      })
+      .catch((error) => {
+        console.error("Error adding user:", error);
+      });
   };
 
-  const deleteUser = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
+  const handleUpdateUser = (updatedUser) => {
+    updateUser(updatedUser)
+      .then((data) => {
+        console.log("User updated successfully:", data);
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === updatedUser.id ? updatedUser : user
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error updating user:", error);
+      });
   };
 
-  const setIsEditing = (id) => {
-    setUsers(
-      users.map((user) =>
-        user.id === id ? { ...user, isEditing: !user.isEditing } : user
-      )
-    );
+  const handleDeleteUser = (userId) => {
+    deleteUser(userId)
+      .then(() => {
+        console.log("User deleted successfully");
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      })
+      .catch((error) => {
+        console.error("Error deleting user:", error);
+      });
   };
 
   return (
     <div>
-      <UserForm addUser={addUser} />
-      {users.map((user) =>
-        user.isEditing ? (
-          <EditUserForm key={user.id} user={user} editUser={editUser} />
-        ) : (
+      <UserForm onAddUser={handleAddUser} />
+      <ul className="user-list">
+        {users.map((user) => (
           <User
             key={user.id}
             user={user}
-            setIsEditing={setIsEditing}
-            deleteUser={deleteUser}
+            onUpdateUser={handleUpdateUser}
+            onDeleteUser={handleDeleteUser}
           />
-        )
-      )}
+        ))}
+      </ul>
     </div>
   );
 }
