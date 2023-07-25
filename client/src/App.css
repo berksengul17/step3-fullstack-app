@@ -18,8 +18,13 @@ body {
   margin-top: 4rem;
 }
 
-/* 8758ff */
-/* FORM COMPONENT STYLES */
+/* USER LIST */
+
+.user-list {
+  list-style: none;
+}
+
+/* FORM STYLES */
 
 .user-form {
   margin-bottom: 0.5rem;
@@ -49,7 +54,7 @@ body {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
-/* USER COMPONENT STYLES */
+/* USER STYLES */
 
 .user {
   display: flex;
