@@ -2,23 +2,42 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import EditUserForm from "./EditUserForm";
 
-function User({ user, setIsEditing, deleteUser }) {
+function User({ user, onUpdateUser, onDeleteUser }) {
+  const [editMode, setEditMode] = useState(false);
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      onDeleteUser(user.id);
+    }
+  };
+
   return (
-    <div className="user">
-      <p>{user.name}</p>
-      <div>
-        <FontAwesomeIcon
-          icon={faPenToSquare}
-          onClick={() => setIsEditing(user.id)}
+    <li>
+      {editMode ? (
+        <EditUserForm
+          user={user}
+          onUpdateUser={onUpdateUser}
+          closeForm={() => setEditMode(false)}
         />
-        <FontAwesomeIcon
-          className="thrash-icon"
-          icon={faTrash}
-          onClick={() => deleteUser(user.id)}
-        />
-      </div>
-    </div>
+      ) : (
+        <div className="user">
+          <p>{user.name}</p>
+          <div>
+            <FontAwesomeIcon
+              icon={faPenToSquare}
+              onClick={() => setEditMode(true)}
+            />
+            <FontAwesomeIcon
+              className="thrash-icon"
+              icon={faTrash}
+              onClick={handleDelete}
+            />
+          </div>
+        </div>
+      )}
+    </li>
   );
 }
 
