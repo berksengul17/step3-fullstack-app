@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { updateUser } from "../userService";
 
 function EditUserForm({ user, onUpdateUser, closeForm }) {
   const [value, setValue] = useState(user.name);
