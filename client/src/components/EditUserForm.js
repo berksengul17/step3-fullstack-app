@@ -1,14 +1,12 @@
 import React, { useState } from "react";
+import { updateUser } from "../userService";
 
-function EditUserForm({ user, editUser }) {
+function EditUserForm({ user, onUpdateUser, closeForm }) {
   const [value, setValue] = useState(user.name);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (value) {
-      editUser(user.id, value);
-      setValue("");
-    }
+  const handleSubmit = () => {
+    onUpdateUser({ id: user.id, name: value });
+    closeForm();
   };
 
   return (
@@ -21,7 +19,7 @@ function EditUserForm({ user, editUser }) {
         placeholder="Edit User"
       />
       <button className="form-button" type="submit">
-        Edit User
+        Save
       </button>
     </form>
   );
