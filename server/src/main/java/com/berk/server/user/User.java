@@ -11,18 +11,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String email;
-    private int age;
 
-    public User(String name, String email, int age) {
+    public User(String name) {
         this.name = name;
-        this.email = email;
-        this.age = age;
     }
 }
