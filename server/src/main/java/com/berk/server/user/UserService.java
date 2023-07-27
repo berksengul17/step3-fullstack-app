@@ -23,19 +23,21 @@ public class UserService {
                         new IllegalArgumentException("User with id " + id + " does not exist"));
     }
 
-    public void createUser(User user) {
-        userRepository.save(user);
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
 
-    public void updateUser(Long id, User updatedUser) {
+    public User updateUser(Long id, User updatedUser) {
         User user = getUserById(id);
 
         String newName = updatedUser.getName();
 
         if (newName != null) {
             user.setName(newName);
-            userRepository.save(user);
+            return userRepository.save(user);
         }
+
+        return null;
     }
 
     public void deleteUser(Long id) {
