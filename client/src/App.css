@@ -1,0 +1,69 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.App {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+/* USER LIST */
+
+.user-list {
+  list-style: none;
+}
+
+/* FORM STYLES */
+
+.user-form {
+  margin-bottom: 0.5rem;
+}
+
+.form-input,
+.form-button {
+  font-size: 1.25rem;
+}
+
+.form-input {
+  outline: none;
+  background: none;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 0.25rem 0.5rem;
+}
+
+.form-button {
+  cursor: pointer;
+  margin-left: 0.25rem;
+  border-style: none;
+  color: white;
+  background-color: #8758ff;
+  border-radius: 5px;
+  padding: 0.3rem 0.5rem;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+/* USER STYLES */
+
+.user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.thrash-icon {
+  margin-left: 0.75rem;
+}
