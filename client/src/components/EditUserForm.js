@@ -3,7 +3,8 @@ import React, { useState } from "react";
 function EditUserForm({ user, onUpdateUser, closeForm }) {
   const [value, setValue] = useState(user.name);
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     onUpdateUser({ id: user.id, name: value });
     closeForm();
   };
