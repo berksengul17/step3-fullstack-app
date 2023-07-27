@@ -18,22 +18,24 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).
+                orElseThrow(() ->
+                        new IllegalArgumentException("User with id " + id + " does not exist"));
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public void createUser(User user) {
+        userRepository.save(user);
     }
 
-    public User updateUser(Long id, User updatedUser) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            user.setName(updatedUser.getName());
-            user.setEmail(updatedUser.getEmail());
-            user.setAge(updatedUser.getAge());
-            return userRepository.save(user);
+    public void updateUser(Long id, User updatedUser) {
+        User user = getUserById(id);
+
+        String newName = updatedUser.getName();
+
+        if (newName != null) {
+            user.setName(newName);
+            userRepository.save(user);
         }
-        return null;
     }
 
     public void deleteUser(Long id) {
