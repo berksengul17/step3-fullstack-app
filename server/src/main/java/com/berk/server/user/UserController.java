@@ -25,13 +25,13 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public void createUser(@RequestBody User user) {
+        userService.createUser(user);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        return userService.updateUser(id, updatedUser);
+    public void updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        userService.updateUser(id, updatedUser);
     }
 
     @DeleteMapping("/{id}")
