@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/users";
+const API_URL = "http://localhost:8080/api/users";
 
 // Fetch all users from the server
 export const fetchUsers = async () => {
@@ -11,6 +11,7 @@ export const fetchUsers = async () => {
 // Add a new user to the server
 export const addUser = async (newUser) => {
   const response = await axios.post(API_URL, newUser);
+  console.log("POST: " + response.data);
   return response.data;
 };
 
