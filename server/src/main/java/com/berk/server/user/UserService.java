@@ -20,7 +20,7 @@ public class UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id).
                 orElseThrow(() ->
-                        new IllegalArgumentException("User with id " + id + " does not exist"));
+                        new UserNotFoundException("User with id " + id + " does not exist"));
     }
 
     public User createUser(User user) {
@@ -41,6 +41,7 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
+        getUserById(id);
         userRepository.deleteById(id);
     }
 }
