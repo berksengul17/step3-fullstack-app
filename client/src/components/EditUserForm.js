@@ -5,7 +5,9 @@ function EditUserForm({ user, onUpdateUser, closeForm }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onUpdateUser({ id: user.id, name: value });
+    if (value.length > 0) {
+      onUpdateUser({ id: user.id, name: value });
+    }
     closeForm();
   };
 
