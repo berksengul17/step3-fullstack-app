@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import EditUserForm from "./EditUserForm";
+import EditUserForm from "./EditUserForm.js";
 
 function User({ user, onUpdateUser, onDeleteUser }) {
   const [editMode, setEditMode] = useState(false);
@@ -28,11 +28,13 @@ function User({ user, onUpdateUser, onDeleteUser }) {
             <FontAwesomeIcon
               icon={faPenToSquare}
               onClick={() => setEditMode(true)}
+              data-testid="edit-btn"
             />
             <FontAwesomeIcon
               className="thrash-icon"
               icon={faTrash}
               onClick={handleDelete}
+              data-testid="delete-btn"
             />
           </div>
         </div>
