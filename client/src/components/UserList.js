@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import User from "./User";
-import UserForm from "./UserForm";
-import { fetchUsers, addUser, updateUser, deleteUser } from "../userService";
+import User from "./User.js";
+import UserForm from "./UserForm.js";
+import { fetchUsers, addUser, updateUser, deleteUser } from "../userService.js";
 
 function UserList() {
   const [users, setUsers] = useState([]);
