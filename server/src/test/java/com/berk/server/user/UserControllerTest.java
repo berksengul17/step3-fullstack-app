@@ -2,13 +2,11 @@ package com.berk.server.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -41,7 +39,8 @@ public class UserControllerTest {
 
     @Test
     public void testGetUsers() throws Exception{
-        when(userService.getAllUsers()).thenReturn(mockUsers);
+        when(userService.getAllUsers())
+                .thenReturn(mockUsers);
 
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
@@ -57,7 +56,7 @@ public class UserControllerTest {
         long existingId = 1L;
         when(userService.getUserById(existingId)).thenReturn(mockUsers.get(0));
 
-        mockMvc.perform(get("/api/users/{existingId}"))
+        mockMvc.perform(get("/api/users/{id}", existingId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value("User 1"));
@@ -68,35 +67,31 @@ public class UserControllerTest {
     @Test
     public void testGetUserById_NonExistingId() throws Exception {
         long nonExistingId = 100L;
+        String expectedMessage = "User with id " + nonExistingId + " does not exist";
 
-        // Mock the behavior of the UserService.getUserById method to throw an exception for a non-existing ID
-        when(userService.getUserById(nonExistingId)).
-                thenThrow(UserNotFoundException.class);
+        when(userService.getUserById(nonExistingId))
+                .thenThrow(new UserNotFoundException(expectedMessage));
 
-        // Perform the request to the getUserById endpoint with the non-existing ID
         ResultActions result = mockMvc.perform(get("/api/users/{id}", nonExistingId));
 
-        // Verify that the response has a 404 Not Found status
         result.andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         MvcResult mvcResult = result.andReturn();
         String responseJson = mvcResult.getResponse().getContentAsString();
-        UserNotFoundException error = new ObjectMapper().readValue(responseJson, UserNotFoundException.class);
+        UserNotFoundException error =
+                new ObjectMapper().readValue(responseJson, UserNotFoundException.class);
 
-        assertEquals("User with id " + nonExistingId + " does not exist", error.getMessage());
-
-
-        // Verify that the service method was called with the correct ID
+        assertEquals(expectedMessage, error.getMessage());
         verify(userService, times(1)).getUserById(nonExistingId);
-
     }
 
     @Test
     public void testCreateUser() throws Exception {
         User user = new User("User 3");
 
-        when(userService.createUser(any())).thenReturn(user);
+        when(userService.createUser(any()))
+                .thenReturn(user);
 
         ObjectMapper mapper = new ObjectMapper();
         String userJson = mapper.writeValueAsString(user);
@@ -116,7 +111,8 @@ public class UserControllerTest {
         String updatedName = "UpdatedUser";
         User updatedUser = new User(existingId, updatedName);
 
-        when(userService.updateUser(existingId, updatedUser)).thenReturn(updatedUser);
+        when(userService.updateUser(existingId, updatedUser)).
+                thenReturn(updatedUser);
 
         ObjectMapper mapper = new ObjectMapper();
         String updateUserJson = mapper.writeValueAsString(updatedUser);
@@ -131,20 +127,62 @@ public class UserControllerTest {
     }
 
     @Test
-    @Disabled
     public void testUpdateUser_NonExistingId() throws Exception {
         long nonExistingId = 100L;
         String updatedName = "UpdatedUser";
         User updatedUser = new User(updatedName);
 
-        when(userService.getUserById(nonExistingId)).thenThrow(IllegalArgumentException.class);
+        String expectedMessage = "User with id " + nonExistingId + " does not exist";
+
+        when(userService.updateUser(nonExistingId, updatedUser)).
+                thenThrow(new UserNotFoundException(expectedMessage));
 
         ObjectMapper mapper = new ObjectMapper();
         String updateUserJson = mapper.writeValueAsString(updatedUser);
 
-        mockMvc.perform(put("/api/users/{id}", nonExistingId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateUserJson))
-                .andExpect(status().isInternalServerError());
+        ResultActions result = mockMvc.perform(put("/api/users/{id}", nonExistingId)
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .content(updateUserJson));
+
+        result.andExpect(status().isInternalServerError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        MvcResult mvcResult = result.andReturn();
+        String responseJson = mvcResult.getResponse().getContentAsString();
+        UserNotFoundException error =
+                new ObjectMapper().readValue(responseJson, UserNotFoundException.class);
+
+        assertEquals(expectedMessage, error.getMessage());
+        verify(userService, times(1)).updateUser(nonExistingId, updatedUser);
+    }
+
+    @Test
+    public void testDeleteUser_ExistingId() throws Exception {
+        long existingId = 1L;
+
+        doNothing().when(userService).deleteUser(existingId);
+
+        mockMvc.perform(delete("/api/users/{id}", existingId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("User with the id " + existingId + " is deleted."));
+
+        verify(userService, times(1)).deleteUser(existingId);
+    }
+
+    @Test
+    public void testDeleteUser_NonExistingId() throws Exception {
+        long nonExistingId = 1L;
+        String expectedMessage = "User with id " + nonExistingId + " does not exist";
+
+        doThrow(new UserNotFoundException(expectedMessage))
+                .when(userService).deleteUser(nonExistingId);
+
+        mockMvc.perform(delete("/api/users/{id}", nonExistingId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        verify(userService, times(1)).deleteUser(nonExistingId);
     }
 }

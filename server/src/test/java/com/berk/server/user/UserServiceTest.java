@@ -106,7 +106,7 @@ public class UserServiceTest {
 
         when(userRepository.findById(nonExistingId)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(UserNotFoundException.class, () -> {
             userService.updateUser(nonExistingId, updatedUser);
         });
     }
@@ -143,7 +143,7 @@ public class UserServiceTest {
         long nonExistingId = 100L;
         when(userRepository.findById(nonExistingId)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(UserNotFoundException.class, () -> {
             userService.deleteUser(nonExistingId);
         });
     }
