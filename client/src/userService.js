@@ -11,7 +11,6 @@ export const fetchUsers = async () => {
 // Add a new user to the server
 export const addUser = async (newUser) => {
   const response = await axios.post(API_URL, newUser);
-  console.log("POST: " + response.data);
   return response.data;
 };
 
@@ -25,5 +24,6 @@ export const updateUser = async (updatedUser) => {
 // Delete a user from the server
 export const deleteUser = async (userId) => {
   const response = await axios.delete(`${API_URL}/${userId}`);
+  console.log(response);
   return response.data;
 };
