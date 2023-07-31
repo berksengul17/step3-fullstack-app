@@ -18,8 +18,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -29,7 +29,7 @@ public class UserController {
             return ResponseEntity.ok(user);
         } catch(UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new UserNotFoundException(e.getMessage()));
+                    .body("{\"message\": " + "\"" + e.getMessage() + "\"" + "}");
         }
     }
 
@@ -38,25 +38,24 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
         try {
             return ResponseEntity.ok(userService.updateUser(id, updatedUser));
         } catch(UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new UserNotFoundException(e.getMessage()));
+                    .body("{\"message\": " + "\"" + e.getMessage() + "\"" + "}");
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
         try {
             userService.deleteUser(id);
             return ResponseEntity.ok("User with the id " + id + " is deleted.");
         } catch(UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new UserNotFoundException(e.getMessage()));
+                    .body("{\"message\": " + "\"" + e.getMessage() + "\"" + "}");
         }
     }
 }
