@@ -24,6 +24,14 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        boolean existsName = userRepository
+                .existsByName(user.getName());
+
+        if(existsName)
+            throw new IllegalArgumentException(
+                    "Name " + user.getName() + " is taken."
+            );
+
         return userRepository.save(user);
     }
 
