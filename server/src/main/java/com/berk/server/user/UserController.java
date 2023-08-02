@@ -34,8 +34,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        try{
+            return ResponseEntity.ok(userService.createUser(user));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"message\": " + "\"" + e.getMessage() + "\"" + "}");
+        }
     }
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
