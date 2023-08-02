@@ -47,8 +47,10 @@ test("adds a new user when the form is submitted", async () => {
   await user.type(inputElement, "New User");
   await user.click(submitButton);
 
-  await waitFor(() => expect(userService.addUser).toHaveBeenCalledTimes(1));
-  expect(userService.addUser).toHaveBeenCalledWith(newUser);
+  await waitFor(() => {
+    expect(userService.addUser).toHaveBeenCalledWith(newUser);
+    expect(userService.addUser).toHaveBeenCalledTimes(1);
+  });
   expect(screen.getByText(newUser.name)).toBeInTheDocument();
 });
 
@@ -69,8 +71,10 @@ test("updates a user's name when edited", async () => {
   await userEvent.type(inputElement, updatedUser.name);
   await userEvent.click(saveButton);
 
-  await waitFor(() => expect(userService.updateUser).toHaveBeenCalledTimes(1));
-  expect(userService.updateUser).toHaveBeenCalledWith(updatedUser);
+  await waitFor(() => {
+    expect(userService.updateUser).toHaveBeenCalledTimes(1);
+    expect(userService.updateUser).toHaveBeenCalledWith(updatedUser);
+  });
   expect(screen.getByText(updatedUser.name)).toBeInTheDocument();
 });
 
@@ -86,7 +90,9 @@ test("deletes a user when the delete icon is clicked and confirmed", async () =>
 
   await user.click(deleteBtn);
 
-  await waitFor(() => expect(userService.deleteUser).toHaveBeenCalledTimes(1));
-  expect(userService.deleteUser).toHaveBeenCalledWith(id);
+  await waitFor(() => {
+    expect(userService.deleteUser).toHaveBeenCalledTimes(1);
+    expect(userService.deleteUser).toHaveBeenCalledWith(id);
+  });
   expect(screen.queryByText("ayşe")).not.toBeInTheDocument();
 });
