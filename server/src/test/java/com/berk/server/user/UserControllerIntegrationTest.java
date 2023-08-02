@@ -21,11 +21,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserControllerTest {
+public class UserControllerIntegrationTest {
     @Mock
     private UserService userService;
     @InjectMocks
     private UserController userController;
+    // It provides a powerful and convenient way to
+    // write unit tests for your controllers without needing
+    // to deploy your application to a web server.
     private MockMvc mockMvc;
     private List<User> mockUsers;
 
