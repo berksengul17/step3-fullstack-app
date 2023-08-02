@@ -14,12 +14,14 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+// used to enable mockito's functionality in junit5
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
-
+    // automatically inject mock objects into
+    // the fields of the class being tested
     @InjectMocks
     private UserService userService;
 
